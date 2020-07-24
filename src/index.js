@@ -1,6 +1,7 @@
 const { readYAML } = require('./libs/utils')
 const { getChannelById, queueReceive } = require('./libs/mq-utils')
 const defaultSetting = require('./setting')
+const { appInit, appRun } = require('./app')
 // 載入外部conf下的config檔案
 const loadConfig = async(setting = null) => {
   if (setting === null) setting = defaultSetting
@@ -12,7 +13,7 @@ const loadConfig = async(setting = null) => {
   result.require2 = require // 儲存require在動態載入用
   return result
 }
-const mqInit = async({hostData, hostId, channelId }) => {
+const mqInit = async({hostData, hostId, channelId, queue }) => {
   // 取得設定檔
   const mqConfig = hostData[hostId]
   // 建立連線 建立channel
@@ -21,18 +22,9 @@ const mqInit = async({hostData, hostId, channelId }) => {
   })
   const queueArray = [
     { 
-      name: 'myapp',
+      name: queue,
       handler: (channel, content, msg) => {
-        // console.log(`Received [socket][noAck: true] queue Rock!! %s`, content)
-        // testCount = testCount + 1
-        // console.log(`testCount=${testCount}`)
-        console.log('got mq')
-        /*
-        setTimeout(() => {
-          console.log(`after run broad cast=${testCount}`)
-          channel.ack(msg)
-        },1000)
-        */
+        appRun(content, msg)
       },
       option: {
         noAck: false
@@ -44,11 +36,13 @@ const mqInit = async({hostData, hostId, channelId }) => {
 const run = async() => {
   // 載入設定檔
   const configData = await loadConfig(defaultSetting)
+  appInit()
   // 監聽mq
   const mqOpt = {
     hostData: configData.mqHost,
-    hostId: 'rabbitRD', // TODO: 需要依照環境改主機
-    channelId: 'main'
+    hostId: configData.config.mq.host, // TODO: 需要依照環境改主機
+    channelId: configData.config.mq.channel,
+    queue: configData.config.mq.queue
   }
   await mqInit(mqOpt)
 }
