@@ -2,4 +2,4 @@ ver: 1.0.0
 mq:
   host: rabbitRD
   channel: main
-  queue: myapp
+  queue: mylog

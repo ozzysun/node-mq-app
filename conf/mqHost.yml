@@ -25,6 +25,10 @@
             common: 接收mq訊息執行app指令
             option:
               durable: false
+          - id: mylog
+            common: 接收mq訊息執行log服務
+            option:
+              durable: false
         exchange:
           - id: ex_hello
             common: 測試用
