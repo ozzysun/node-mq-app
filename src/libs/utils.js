@@ -1,8 +1,5 @@
-const yaml = require('js-yaml')
-const path = require('path')
-const fs = require('fs')
 const { argv } = require('yargs')
-const { isFileExist, readYAML, writeYAML } = require(('./file'))
+const { isFileExist, writeYAML } = require(('./file'))
 const getArgs = () => {
   const hostId = argv.host || argv.h || null
   const channelId = argv.cannel || argv.c || null
