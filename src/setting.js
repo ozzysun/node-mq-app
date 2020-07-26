@@ -6,7 +6,12 @@ module.exports = {
       id: 'config',
       path: path.resolve('./conf/index.yml'),
       default: {
-        ver: '0.0.1'
+        ver: '0.0.1',
+        mq: {
+          host: 'rabbitLocal',
+          channel: 'main',
+          queue: 'myapp'
+        }
       }
     },
     {
@@ -28,10 +33,6 @@ module.exports = {
             main: {
               isConfirm: false,
               queue: [
-                { id: 'socket',
-                  common: '發送sock廣播用',
-                  option: { durable: false }
-                },
                 { id: 'myapp',
                   common: '觸發執行app用',
                   option: { durable: false }
